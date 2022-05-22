@@ -1,0 +1,53 @@
+{% include 'base.html' %}
+{%include 'header.html' %}
+
+{% load static %}
+{% block content %}
+
+<div class="container mt-2">
+    <div class="row mb-5">
+        {% for hotel in hotels %}
+        <div class="col-md-3 item mb-3" style="margin-top:40px;">
+            <div class="card h-100 item-card card-block">
+                <h4 class="card-title text-right"><i class="material-icons"></i></h4>
+                <img src="/media/{{hotel.image}}" alt="Photo" height="250px" style="object-fit:cover;">
+                <div class="textline p-2 text-center">
+                    <h5 class="item-card-title mt-3 p-2">{{hotel.name}}</h5>
+                    <p class="card-text">{{hotel.location}}</p>
+                    <p class="card-text">{{hotel.price}}</p>
+                    <a href="/hotels/{{hotel.id}}">View Details</a>
+
+                    {% if user.is_authenticated %}
+                    <button class="btn add-wishlist" data-hotel="{{hotel.id}}"><i
+                            class="fa fa-heart"></i> + Add to Wish List
+                    </button>
+                    {% else %}
+                    <button class="btn btn-sm btn-danger disabled">
+                        <i class="fa fa-heart"></i><a href="{% url 'login' %}">+ Add to Wish List</a>
+                    </button>
+                    {% endif%}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div>
+            {% if pagination.current_page > 1 %}
+            <a href="/home/page/{{pagination.previous_page}}">
+                Previous Page
+            </a>
+            {% endif %}
+
+            {% if pagination.current_page != pagination.last_page %}
+            <a href="/home/page/{{pagination.next_page}}">
+                Next Page
+            </a>
+            {% endif %}
+        </div>
+
+
+        {% endblock %}
+    </div>
+</div>
+
+{% include 'footer.html' %}
+

@@ -1,0 +1,75 @@
+{% load static %}
+
+<head>
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/hotel.css' %}"/>
+</head>
+
+<body>
+
+
+<section class="rooms sec-width" id="rooms">
+
+    <div class="title">
+
+    </div>
+    <div class="rooms-container">
+        <!-- single room -->
+        <article class="room">
+            <div class="room-image">
+                <img src="/media/{{hotel.image}}" alt="Photo" height="350px" style="object-fit:cover;">
+            </div>
+            <div class="room-text">
+
+                <ul>
+                    <li>
+                     <h2>{{hotel.name}}</h2>
+                    </li>
+                    <li>
+                        <i class="fas fa-map-marker-alt"></i>
+                       {{hotel.location}}
+                    </li>
+
+                </ul>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus exercitationem repellendus maxime
+                    ullam tempore architecto provident unde expedita quam beatae, dolore eligendi molestias sint tenetur
+                    incidunt voluptas. Unde corporis qui iusto vitae. Aut nesciunt id iste, cum esse commodi nemo?</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla corporis quasi officiis cumque, fugiat
+                    nostrum sunt, tempora animi dicta laborum beatae ratione doloremque. Delectus odio sit eius labore,
+                    atque quo?</p>
+                <p class="rate">
+                    <span>Rs.{{hotel.price}}</span> Per Night
+                </p>
+                <button type="button" class="btn">book now</button>
+            </div>
+        </article>
+
+</section>
+
+<!--        {{hotel.id}}-->
+
+<div class="container mt-2">
+
+    <h2 class="recon"><span>You might also like:</span></h2>
+    <div class="row mb-5">
+        {% for hotel in recommended_hotels %}
+        <div class="col-md-3 item mb-3" style="margin-top:40px;">
+            <div class="card h-100 item-card card-block">
+                <h4 class="card-title text-right"><i class="material-icons"></i></h4>
+                <img src="/media/{{hotel.image}}" alt="Photo" height="250px" style="object-fit:cover;">
+                <div class="textline p-2 text-center">
+                      <a href="/hotels/{{hotel.id}}">{{ hotel.name }}</a>
+                    <p class="card-text">{{hotel.location}}</p>
+                    <p class="card-text">{{hotel.price}}</p>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+
+</body>
+
+{% include 'footer.html' %}
+

@@ -1,0 +1,46 @@
+{% include 'base.html' %}
+{% load static %}
+{% block content %}
+<main class="container my-4">
+    <!-- Featured Products -->
+    <h3 class="my-3 border-bottom pb-6">Wishlist Items</h3>
+    <div class="row">
+        <div class="col-md-3">
+				{% include 'sidebar.html' %}
+        </div>
+        <div class="col-md-9">
+            <div class="table-responsive">
+                <table class="table-bordered table">
+                    <thead>
+                    <tr>
+                        <th>Hotel Name</th>
+                        <th>Image</th>
+                        <th>Price</th>
+						<th>Location</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for wl in wlist %}
+                    <tr>
+                        <td><a href="" style="color:black;">{{wl.hotel.name}}</a></td>
+                        <td>
+                            <img width="50" src="/media/{{wl.hotel.image}}"
+                                 alt="{{wl.hotel.name}}">
+                        </td>
+                        <td>{{wl.hotel.price}}</td>
+                     <td>{{wl.hotel.location}}</td>
+                        <td>
+            <a href="/remove_from_favorite/{{hotel.id}}" style="color:black;">Remove from favorites</a>
+     </td>
+					</tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}
