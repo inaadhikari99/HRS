@@ -4,10 +4,11 @@ import pandas as pd
 from django.db import transaction
 import math
 from django.http import JsonResponse
-
-from .forms import UploadForm
+from django.views import View
+import requests
+from .forms import UploadForm, ReviewForm
 from .ml import get_recommendation_for_hotel
-from .models import Hotel, WishList
+from .models import Hotel, WishList, Review
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from .forms import CreateUserForm
@@ -25,6 +26,14 @@ from rest_framework import status
 def index(request):
     hotel = Hotel.objects.all()
     return render(request, 'index.html', {'hotels': hotel})
+
+
+def about(request):
+    return render(request, 'about.html')
+
+
+def contact(request):
+    return render(request, 'contact.html')
 
 
 def home(request, page_number):
@@ -55,7 +64,7 @@ def loginPage(request):
 
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect('/home/page/1')
 
         else:
             messages.info(request, 'Username or password is incorrect')
@@ -122,76 +131,99 @@ def upload_dataset(request):
                   )
 
 
-def Addwishlist(request):
-    hid = request.GET['hotel']
-    hotel = Hotel.objects.get(pk=hid)
-    data = {}
-    checkwishlist = WishList.objects.filter(hotel=hotel,
-                                            user=request.user).count()
-    if checkwishlist > 0:
-        data = {
-            'bool': False
-        }
-    else:
-
-        wishlist = WishList.objects.create(
-            hotel=hotel,
-            user=request.user
-        )
-        data = {
-            'bool': True
-        }
-    return JsonResponse(data)
-
-
-def my_wishlist(request):
-    wlist = WishList.objects.filter(user=request.user).order_by('-id')
-    return render(request, 'wishlist.html', {'wlist': wlist})
-
-
-def remove_from_favourite(request, id):
+def add_to_favorite(request, id):
     hotel = Hotel.objects.get(id=id)
-    hotel.favourite.remove(request.user)
-    return redirect('/hotel/{0}'.format(id))
+    hotel.favorite.add(request.user)
+
+    return redirect('/hotels/{0}'.format(id))
 
 
-class RetrieveHotelList(APIView):
-    def get(self, request):
-        hotels = Hotel.objects.all()[0:10]
-        serializer = HotelSerializer(hotels, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+def remove_from_favorites(request, id):
+    restaurant = Hotel.objects.get(id=id)
+    restaurant.favorite.remove(request.user)
 
-class GetHotelRecommendation(APIView):
-    def get(self, request, id):
-        hotel_ids = get_recommendation_for_hotel(id)
-        recommended_hotels = Hotel.objects.filter(id__in=hotel_ids)
-        serializer = HotelSerializer(recommended_hotels,many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
-
-class CreateHotel(APIView):
-    def post(self,request):
-        serializer = HotelSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    return redirect('/hotels/{0}'.format(id))
 
 
-def get_hotel_info(request,id):
+def get_user_favorites(request):
+    hotels = request.user.favorite.all()
+    return render(request, 'user_favourite.html', {'hotel': hotels})
+
+
+def get_hotel_info(request, id):
+    if not request.user.is_authenticated:
+        return redirect('/register')
     try:
+        review_form = ReviewForm()
+        if request.method == 'POST':
+            review_form = ReviewForm(request.POST)
+            if review_form.is_valid():
+                review = review_form.save(commit=False)
+                review.hotel_id = id
+                review.user_id = request.user.id
+                review.save()
 
         hotel = Hotel.objects.get(id=id)
-
+        reviews = Review.objects.filter(hotel=hotel).order_by('created_at')[0:4]
+        context = {
+            'is_favorite': False
+        }
         hotel_ids = get_recommendation_for_hotel(id)
-        recommended_hotels = Hotel.objects.filter(id__in=hotel_ids)
 
+        recommended_hotels = Hotel.objects.filter(id__in=hotel_ids)
+        if hotel.favorite.filter(pk=request.user.pk).exists():
+            context['is_favorite'] = True
         return render(request, 'hotel_detail.html', {
             'hotel': hotel,
+            'context': context,
+            'reviews': reviews,
+            'review_form': review_form,
             # //LEFT SIDE KO CHAI HTML MA RAKHNE
             'recommended_hotels': recommended_hotels
-
         })
 
     except Hotel.DoesNotExist:
         return render(request, '404.html')
+
+
+# class KhaltiRequestView(View):
+#     def get(self, request, *args, **kwargs):
+#         # hotel = Hotel.objects.get(price)
+#         # context = {
+#         #          "hotel": hotel
+#         # }
+#         return render(request, "khaltirequest.html",{'hotels': hotel})
+
+def KhaltiReq(request, id):
+    hotel = Hotel.objects.get(id=id)
+
+    return render(request, "khaltirequest.html", {'hotel': hotel})
+
+def KhaltiVerify(request):
+    token = request.GET.get("token")
+    amount = request.GET.get("amount")
+    book_id = request.GET.get("book_id")
+
+    url = "https://khalti.com/api/v2/payment/verify/"
+    payload = {
+        "token": token,
+        "amount": amount,
+        "book_id":book_id
+    }
+    headers = {
+        "Authorization": "Key test_secret_key_93fad8c9fa8647f7a41b162c32f48f95"
+    }
+
+    response = requests.post(url, payload, headers=headers)
+    resp_dict = response.json()
+
+    if resp_dict.get('idx'):
+        success = True
+
+    else:
+        success = False
+
+    data = {
+        "success": success
+    }
+    return JsonResponse(data)

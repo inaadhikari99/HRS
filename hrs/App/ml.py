@@ -10,7 +10,7 @@ def combined_feature(row):
     return row['name'] + " " + row['location'] + "" + row['cuisine']
 
 
-def get_id_from_inside(df, index):
+def get_id_from_index(df, index):
     return df[df.index == index]["id"].values[0]
 
 
@@ -41,9 +41,9 @@ def get_recommendation_for_hotel(hotel_id):
     hotel_ids = []
     for hotel in sorted_similar_hotels:
         i = i + 1
-        hotel_ids.append(get_id_from_inside(df, hotel[0]))
+        hotel_ids.append(get_id_from_index(df, hotel[0]))
 
-        if i > 15:
+        if i > 10:
             break
 
     return hotel_ids

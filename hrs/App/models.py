@@ -9,6 +9,7 @@ class Hotel(models.Model):
     location = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='images/', null=True, blank=True)
     cuisine = models.TextField(blank=True, null=True)
+    favorite = models.ManyToManyField(User, related_name='favorite')
     created = models.DateField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -27,4 +28,10 @@ class WishList(models.Model):
     class Meta:
         verbose_name_plural = ' Wishlist '
 
-
+class Review(models.Model):
+    review = models.TextField(max_length=200,blank=False, null=False)
+    created_at = models.DateTimeField(auto_now=True)
+    hotel = models.ForeignKey(
+        Hotel, on_delete=models.CASCADE, related_name='hotel')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='user')

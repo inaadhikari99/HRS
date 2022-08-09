@@ -15,27 +15,26 @@ Including another URLconf
 """
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
 from django.conf import settings
 from App import views
+from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/', views.index, name='home'),
-    path('home/page/<int:page_number>', views.home, name='home'),
+    path('', views.index, name='home'),
+    path('about/', views.about, name='about'),
+    path('contact/', views.contact, name='contact'),
+    path('home/page/<int:page_number>', views.home, name='homepage'),
     path('register/', views.register, name="register"),
     path('login/', views.loginPage, name="login"),
     path('logout/', views.logoutUser, name="logout"),
     path('upload_dataset/', views.upload_dataset, name="upload dataset"),
-    path('add_wishlist/', views.Addwishlist, name='wishlist'),
-    path('my_wishlist/', views.my_wishlist, name='mywishlist'),
-    path('remove_from_favourite/<int:id>', views.remove_from_favourite, name="remove from favourite"),
-
+    path('user_favorites/', views.get_user_favorites),
+    path('add_to_favorite/<int:id>', views.add_to_favorite),
+    path('remove_from_favorites/<int:id>', views.remove_from_favorites),
     path('hotels/<int:id>', views.get_hotel_info),
-    path('api/hotels',views.RetrieveHotelList.as_view()
-    ,name="get_hotels_api"),
-    path('api/recommended_hotel/<int:id>',views.GetHotelRecommendation.as_view(),name='get_hotels_recommendation_api'),
-    path('api/add_hotel',views.CreateHotel.as_view(),name='add hotel')
+    path('khalti-request/<int:id>', views.KhaltiReq, name="khaltirequest"),
+    path("khalti-verify/", views.KhaltiVerify, name="khaltiverify")
 
 ]
 if settings.DEBUG:

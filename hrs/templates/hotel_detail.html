@@ -1,75 +1,132 @@
-{% load static %}
+{% include 'base.html' %}
+{% block content %}
 
+{% load static %}
+{% endblock %}
 <head>
-    <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/hotel.css' %}"/>
+
+    <title>{{hotel.name}}</title>
+
 </head>
 
 <body>
 
-
 <section class="rooms sec-width" id="rooms">
 
-    <div class="title">
-
-    </div>
-    <div class="rooms-container">
+    <div class="rooms-container" style="object-fit:cover;">
         <!-- single room -->
         <article class="room">
             <div class="room-image">
-                <img src="/media/{{hotel.image}}" alt="Photo" height="350px" style="object-fit:cover;">
+
+                <img src="/media/{{hotel.image}}" alt="Photo" style="object-fit:cover;">
+
             </div>
+
             <div class="room-text">
 
                 <ul>
                     <li>
-                     <h2>{{hotel.name}}</h2>
+                        <h2>{{hotel.name}}</h2>
                     </li>
                     <li>
-                        <i class="fas fa-map-marker-alt"></i>
-                       {{hotel.location}}
+                        <i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
+                        {{hotel.location}}
                     </li>
 
                 </ul>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus exercitationem repellendus maxime
-                    ullam tempore architecto provident unde expedita quam beatae, dolore eligendi molestias sint tenetur
-                    incidunt voluptas. Unde corporis qui iusto vitae. Aut nesciunt id iste, cum esse commodi nemo?</p>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla corporis quasi officiis cumque, fugiat
-                    nostrum sunt, tempora animi dicta laborum beatae ratione doloremque. Delectus odio sit eius labore,
-                    atque quo?</p>
+                <p>This hotel offers a complete experience with common areas that allow you to
+                    meet new people in a unique atmosphere. Lounge area, Ping Pong table, table soccer, darts & Boiler
+                    room: we told you, it’s not a hotel like the others, it’s a sharing hotel.</p>
+                <p>At the hotel, the rooms come with a wardrobe. Complete with a private bathroom fitted with a shower
+                    and bathrobes, all guest rooms at Himalayan Suite Hotel have a TV and air conditioning, and some
+                    rooms also feature a seating area. The rooms will provide guests with a fridge.
+
+                    Continental and buffet breakfast options are available every morning at the accommodation.
+
+                    Himalayan Suite Hotel offers a terrace.
+
+                    Hanuman Dhoka is 2.5 km from the hotel, while Kathmandu Durbar Square is 2.8 km from the property.
+
+                    This is our guests' favourite part of Kathmandu, according to independent reviews.</p>
                 <p class="rate">
                     <span>Rs.{{hotel.price}}</span> Per Night
                 </p>
-                <button type="button" class="btn">book now</button>
+
+                <div class="container-fluid mt-3 mb-2">
+                    {% if not context.is_favorite %}
+                    <div>
+                        <a class="btn btn-success" href="/add_to_favorite/{{hotel.id}}"><i
+                                class="fa fa-heart"></i> Add to favorites</a>
+                    </div>
+                    {% else %}
+                    <div>
+                        <a class="btn btn-danger" href="/remove_from_favorites/{{hotel.id}}"><i
+                                class="fa fa-heart"></i> Remove from favorites</a>
+                    </div>
+                    {% endif %}
+                </div>
+                <!--                /////-->
+                <div class="container-fluid mt-4 mb-2">
+                    <div>
+                        <a class="btn btn-warning btn-lg" href="/khalti-request/{{hotel.id}}">
+                                Book Now</a>
+                    </div>
+                </div>
             </div>
+
+
         </article>
 
 </section>
 
-<!--        {{hotel.id}}-->
 
-<div class="container mt-2">
+<div class="container mt-1">
 
-    <h2 class="recon"><span>You might also like:</span></h2>
+    <h2 class="recon"><span>People Who Viewed This Hotel Also Viewed</span></h2>
     <div class="row mb-5">
         {% for hotel in recommended_hotels %}
-        <div class="col-md-3 item mb-3" style="margin-top:40px;">
-            <div class="card h-100 item-card card-block">
-                <h4 class="card-title text-right"><i class="material-icons"></i></h4>
-                <img src="/media/{{hotel.image}}" alt="Photo" height="250px" style="object-fit:cover;">
-                <div class="textline p-2 text-center">
-                      <a href="/hotels/{{hotel.id}}">{{ hotel.name }}</a>
-                    <p class="card-text">{{hotel.location}}</p>
-                    <p class="card-text">{{hotel.price}}</p>
 
+        <div class="col-md-3 item mb-3" style="margin-top:40px;">
+            <div class="card-group">
+                <div class="card h-100 item-card card-block">
+                    <img src="/media/{{hotel.image}}" alt="Photo" height="250px" style="object-fit:cover;">
+                    <div class=" p-2 text-center">
+                        <a style="color:black; font-size:20px; font-weight:bold;" href="/hotels/{{hotel.id}}">View
+                            Details</a></br>
+                        <p class="card-text">
+                            <i class="fa fa-map-marker " aria-hidden="true"></i>{{hotel.location}}</p>
+                        <p class="rate1">
+                            <span>Rs.{{hotel.price}}</span> Per Night
+                        </p>
+
+
+                    </div>
                 </div>
             </div>
+
         </div>
         {% endfor %}
 
+        <form action="/hotels/{{hotel.id}}" method="POST">
+            {% csrf_token %}
+            {{ review_form.as_p }}
+            <input type="submit" value="submit"/>
+        </form>
 
-</body>
-
-{% include 'footer.html' %}
-
+        <div class="container">
+            <div class="mgb-40 padb-30 auto-invert line-b-4 align-center">
+                <h4 class="font-cond-l fg-accent lts-md mgb-10" contenteditable="false">Not Yet Convinced?</h4>
+                <h1 class="font-cond-b fg-text-d lts-md fs-300 fs-300-xs no-mg" contenteditable="false">Read Customer
+                    Reviews</h1>
+            </div>
+            <ul class="hash-list cols-3 cols-1-xs pad-30-all align-center text-sm">
+                {% for review in reviews %}
+                <li>
+                    <p class="fs-110 font-cond-l" contenteditable="false">{{review.review}}</p>
+                    <h5 class="font-cond mgb-5 fg-text-d fs-130" contenteditable="false">{{review.user.username}}</h5>
+                    <small class="font-cond case-u lts-sm fs-80 fg-text-l"
+                           contenteditable="false">{{review.created_at}}</small>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>

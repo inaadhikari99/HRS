@@ -1,9 +1,9 @@
 {% load static %}
 <head>
 
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}"/>
 
+    <link rel="stylesheet" type="text/css" href="{% static 'css/header.css' %}"/>
+    <script src="{% static 'js/script.js' %}"></script>
 </head>
 
 <header class="header" id="header">
@@ -12,15 +12,18 @@
             <span>Hotel Recommendation in nepal</span>
         </div>
 
+
     </div>
 
-    <div class="head-bottom flex">
+    <div class="head-bottom ">
         <h2>FIND NICE AND COMFORTABLE PLACE TO STAY</h2>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto est quos veniam impedit numquam itaque
-            voluptatum, dicta asperiores accusamus, eligendi neque ut incidunt, modi harum molestiae atque natus officia
-            minima.</p>
-        <button type="button" class="head-btn">GET STARTED</button>
+        <p>A once in a lifetime experience, a trip to Nepal will surely leave you breathless.
+            The only thing that’s flat about this country is the runway of Kathmandu Airport.
+            Whether you’re approaching from the air or walking down the street, the towering
+            mountains all around seem to vanish into the heavens. The Kathmandu Valley boasts the world’s
+            most dense collection of World Heritage Sites.  </p>
+        <button type="button" class="head-btn"> <a href="{% url 'about' %}" style="color:white;">About Us</button>
+         <button type="button" class="head-btn"> <a href="{% url 'contact' %}" style="color:white;">Contact Us</a></button>
     </div>
+
 </header>
-
-

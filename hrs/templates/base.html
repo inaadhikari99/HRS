@@ -2,71 +2,41 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
-     <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}"/>
     <script src="{% static 'js/bootstrap.js' %}"></script>
     <script src="{% static 'jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/wishlist.js' %}"></script>
-
+    <link rel="stylesheet" type="text/css" href="{% static 'css/hotel_detail.css' %}"/>
+    <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}"/>
 
 
 </head>
 <body>
 {% load static %}
+<nav class="navbar navbar-light bg-light justify-content-between">
+    <a class="navbar-brand" href="{% url 'home' %}" >Hotel </a>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'home' %}">Hotel </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-<!--                  -->
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About Us</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact Us</a>
-                </li>
+    <ul>
+        {% if user.is_authenticated %}
+        <span style="color:black;">Hello,{{request.user}}</span>
+        <span><button type="button" class="btn"
+                      style="color: white; margin-right:20px;background-color: black;" type="submit">
+            <a href="/user_favorites" >My Favorites</a></button>
 
-            </ul>
-            <form class="d-flex">
-                <input class="form-control me-2" style="margin-left:10px;" type="search" placeholder="Search Hotels.."
-                       aria-label="Search">
-
-
-                <button class="btn " style="background: #fd5e14; margin-right:280px; margin-left:10px" type="submit">
-                    Search
-                </button>
-            </form>
-            <ul>
-                {% if user.is_authenticated %}
-                <span style="color:white;">Hello,{{request.user}}</span>
                 <span><button type="button" class="btn"
-                              style="color: white; margin-right:20px;background-color: #fd5e14;" type="submit">  <a
-                        href="{% url 'mywishlist' %}" style="color:white;">My Wishlist</a></button>
-                <span><button type="button" class="btn"
-                              style="color: white; margin-right:20px;background-color: #fd5e14;" type="submit">  <a
+                              style="color: white; margin-right:20px;background-color: black;" type="submit">  <a
                         href="{% url 'logout' %}" style="color:white;">Logout</a></button>
   </span>
                 {% else %}
-                <button type="button" class="btn" style="color: white; margin-right:20px;background-color: #fd5e14;"
+                <button type="button" class="btn" style="color: white; margin-right:20px;background-color: black;"
                         type="submit"><a href="{% url 'login' %}" style="color:white;">Login</a></button>
 
                 <button type="button" onclick="{% url 'register' %}" class="btn "
-                        style="color: white; background-color: #fd5e14;" type="submit">
+                        style="color: white; background-color: black;" type="submit">
                     <a href="{% url 'register' %}" style="color:white;">Create an Account</a></button>
-            </ul>
-                {% endif %}
-        </div>
-
-
-    </div>
+    </ul>
+    {% endif %}
 </nav>
-
 
 
 </body>

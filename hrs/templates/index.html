@@ -4,28 +4,46 @@
 {% load static %}
 {% block content %}
 
-<div class="container mt-2">
+<style>
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: 'Playfair Display', serif;
+}
+    .title{
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 30px;
+    color: var(--yellow);
+    border-bottom: 5px solid var(--dark);
+    width: 235px;
+    padding-left:30px;
+    margin: 15px 0;
+}
+.item-card-title{
+font-size:25px;
+}
+
+</style>
+<div class = "title">
+                <h2>HOTELS</h2>
+            </div>
+<div class="container mt-3">
     <div class="row mb-5">
         {% for hotel in hotels %}
         <div class="col-md-3 item mb-3" style="margin-top:40px;">
-            <div class="card h-100 item-card card-block">
-                <h4 class="card-title text-right"><i class="material-icons"></i></h4>
-                <img src="/media/{{hotel.image}}" alt="Photo" height="250px" style="object-fit:cover;">
+            <div class="card h-80 item-card card-block">
+                <img src="/media/{{hotel.image}}" alt="Photo" height="200px" style="object-fit:cover;">
                 <div class="textline p-2 text-center">
-                    <h5 class="item-card-title mt-3 p-2">{{hotel.name}}</h5>
-                    <p class="card-text">{{hotel.location}}</p>
-                    <p class="card-text">{{hotel.price}}</p>
-                    <a href="/hotels/{{hotel.id}}">View Details</a>
+                    <h5 class="item-card-title mt-1 p-2">{{hotel.name}}</h5>
+                    <p class="card-text"> <i class="fas fa-map-marker-alt"></i> {{hotel.location}}</p>
+<!--                    <p class="card-text">{{hotel.price}}</p>-->
+                    <a href="/hotels/{{hotel.id}}" style="color:black; font-size:20px; font-weight:bold;"  >View Details</a></br>
 
-                    {% if user.is_authenticated %}
-                    <button class="btn add-wishlist" data-hotel="{{hotel.id}}"><i
-                            class="fa fa-heart"></i> + Add to Wish List
-                    </button>
-                    {% else %}
-                    <button class="btn btn-sm btn-danger disabled">
-                        <i class="fa fa-heart"></i><a href="{% url 'login' %}">+ Add to Wish List</a>
-                    </button>
-                    {% endif%}
+
+
+
                 </div>
             </div>
         </div>

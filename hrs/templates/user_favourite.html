@@ -1,0 +1,23 @@
+{% include 'base.html' %}
+{% block content %}
+
+{% load static %}
+{% endblock %}
+
+<div class="container-fluid my-3 ">
+    <div class="row">
+    {% for hotel in hotel %}
+            <div class="card favorites" style="width: 25rem; flex-direction: row!important;" >
+                <div class="card-body">
+                  <h5 class="card-title">{{hotel.name}}</h5>
+                     <img src="/media/{{hotel.image}}" alt="Photo" style= width:350px height="200px" ;">
+                  <h6 class="card-subtitle mb-2 text-muted">{{hotel.address}}</h6>
+                  <p class="card-text"><i>Price Range:</i> {{hotel.price}}</p>
+                  <a href="/hotels/{{hotel.id}}" class="btn btn-success">View Details</a>
+                  <a href="/remove_from_favorites/{{hotel.id}}" class="btn btn-danger"><i
+                            class="fa fa-heart"></i> Remove from favorites</a>
+                </div>
+              </div>
+    {% endfor %}
+</div>
+</div>
